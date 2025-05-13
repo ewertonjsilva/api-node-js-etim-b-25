@@ -4,10 +4,22 @@ module.exports = {
     async listarUsuarios(request, response) {
         try {
 
+            const sql = `
+                SELECT 
+                    usu_id, usu_nome, usu_email, usu_cpf, usu_dt_nasc, 
+                    usu_senha, usu_tipo, usu_ativo = 1 AS usu_ativo 
+                FROM 
+                    usuarios;
+            `; 
+
+            const [rows] = await db.query(sql);
+            const nItens = rows.length;
+
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Lista de usuários',
-                dados: null
+                nItens, 
+                dados: rows
             });
         } catch (error) {
             return response.status(500).json({
